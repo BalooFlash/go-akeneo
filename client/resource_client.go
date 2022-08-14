@@ -1,6 +1,8 @@
 package client
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 
@@ -28,5 +30,24 @@ func (r ResourceClient) GetResource(uri string, uriParams []string) (*http.Respo
 
 	headers := map[string]string{"Accept": "*/*"}
 
-	return r.httpClient.SendRequest("GET", uri, headers, nil)
+	return r.httpClient.SendRequest(http.MethodGet, uri, headers, nil)
+}
+
+func (r ResourceClient) CreateResource(uri string, uriParams []string, body json.RawMessage) (*http.Response, error) {
+	uri = r.uriGenerator.Generate(uri, uriParams)
+
+	headers := map[string]string{"Content-Type": "application/json"}
+
+	return r.httpClient.SendRequest(http.MethodPost, uri, headers, bytes.NewReader(body))
+}
+
+func (r ResourceClient) DeleteResource(uri string, uriParams []string) error {
+	uri = r.uriGenerator.Generate(uri, uriParams)
+
+	_, err := r.httpClient.SendRequest(http.MethodDelete, uri, map[string]string{}, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
