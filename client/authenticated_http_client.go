@@ -17,29 +17,29 @@ type authenticationApi interface {
 
 type AuthenticatedHttpClient struct {
 	httpClient        HttpClient
-	auth              security.Auth
+	authentication    security.Auth
 	authenticationApi authenticationApi
 }
 
 func NewAuthenticatedHttpClient(httpClient HttpClient, auth security.Auth, authenticationApi authenticationApi) AuthenticatedHttpClient {
 	return AuthenticatedHttpClient{
 		httpClient:        httpClient,
-		auth:              auth,
+		authentication:    auth,
 		authenticationApi: authenticationApi,
 	}
 }
 
 func (a AuthenticatedHttpClient) SendRequest(method, uri string, headers map[string]string, body io.Reader) (*http.Response, error) {
-	if a.auth.AccessToken == "" {
-		ar, err := a.authenticationApi.AuthenticateByPassword(a.auth.ClientId, a.auth.Secret, a.auth.Username, a.auth.Password)
+	if a.authentication.AccessToken == "" {
+		ar, err := a.authenticationApi.AuthenticateByPassword(a.authentication.ClientId, a.authentication.Secret, a.authentication.Username, a.authentication.Password)
 		if err != nil {
 			return nil, err
 		}
-		a.auth.AccessToken = ar.AccessToken
-		a.auth.RefreshToken = ar.RefreshToken
+		a.authentication.AccessToken = ar.AccessToken
+		a.authentication.RefreshToken = ar.RefreshToken
 	}
 
-	headers["Authorization"] = fmt.Sprintf("Bearer %s", a.auth.AccessToken)
+	headers["Authorization"] = fmt.Sprintf("Bearer %s", a.authentication.AccessToken)
 	res, err := a.httpClient.SendRequest(method, uri, headers, body)
 	if err != nil {
 		return nil, err
@@ -50,10 +50,10 @@ func (a AuthenticatedHttpClient) SendRequest(method, uri string, headers map[str
 		if err != nil {
 			return nil, err
 		}
-		a.auth.AccessToken = ar.AccessToken
-		a.auth.RefreshToken = ar.RefreshToken
+		a.authentication.AccessToken = ar.AccessToken
+		a.authentication.RefreshToken = ar.RefreshToken
 
-		headers["Authorization"] = fmt.Sprintf("Bearer %s", a.auth.AccessToken)
+		headers["Authorization"] = fmt.Sprintf("Bearer %s", a.authentication.AccessToken)
 		res, err = a.httpClient.SendRequest(method, uri, headers, body)
 		if err != nil {
 			return nil, err
@@ -64,5 +64,5 @@ func (a AuthenticatedHttpClient) SendRequest(method, uri string, headers map[str
 }
 
 func (a AuthenticatedHttpClient) renewTokens() (api.AuthenticationResponse, error) {
-	return a.authenticationApi.AuthenticateByRefreshToken(a.auth.ClientId, a.auth.Secret, a.auth.RefreshToken)
+	return a.authenticationApi.AuthenticateByRefreshToken(a.authentication.ClientId, a.authentication.Secret, a.authentication.RefreshToken)
 }

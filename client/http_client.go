@@ -30,12 +30,4 @@ func (h HttpClient) SendRequest(method, uri string, headers map[string]string, b
 	}
 
 	return res, nil
-
-	//resBody, err := ioutil.ReadAll(res.Body)
-	//if err != nil {
-	//	fmt.Printf("client: could not read response body: %s\n", err)
-	//	os.Exit(1)
-	//}
-	//
-	//fmt.Println("got response", string(resBody))
 }
