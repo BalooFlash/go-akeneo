@@ -6,11 +6,11 @@ import (
 )
 
 type PimClient struct {
-	Auth       security.Auth
+	Auth       security.Authentication
 	ProductApi api.ProductApi
 }
 
-func NewPimClient(auth security.Auth, productApi api.ProductApi) PimClient {
+func NewPimClient(auth security.Authentication, productApi api.ProductApi) PimClient {
 	return PimClient{Auth: auth, ProductApi: productApi}
 }
 

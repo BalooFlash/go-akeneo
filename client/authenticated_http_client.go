@@ -17,11 +17,11 @@ type authenticationApi interface {
 
 type AuthenticatedHttpClient struct {
 	httpClient        HttpClient
-	authentication    security.Auth
+	authentication    security.Authentication
 	authenticationApi authenticationApi
 }
 
-func NewAuthenticatedHttpClient(httpClient HttpClient, auth security.Auth, authenticationApi authenticationApi) AuthenticatedHttpClient {
+func NewAuthenticatedHttpClient(httpClient HttpClient, auth security.Authentication, authenticationApi authenticationApi) AuthenticatedHttpClient {
 	return AuthenticatedHttpClient{
 		httpClient:        httpClient,
 		authentication:    auth,

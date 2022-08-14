@@ -1,6 +1,6 @@
 package security
 
-type Auth struct {
+type Authentication struct {
 	ClientId     string
 	Secret       string
 	Username     string
@@ -9,8 +9,8 @@ type Auth struct {
 	RefreshToken string
 }
 
-func NewFromPassword(clientId, secret, username, password string) Auth {
-	return Auth{
+func NewFromPassword(clientId, secret, username, password string) Authentication {
+	return Authentication{
 		ClientId: clientId,
 		Secret:   secret,
 		Username: username,

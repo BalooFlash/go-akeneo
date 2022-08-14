@@ -21,7 +21,7 @@ func (c ClientBuilder) BuildAuthenticatedByPassword(clientId, secret, username, 
 	return c.BuildAuthenticatedClient(authentication)
 }
 
-func (c ClientBuilder) BuildAuthenticatedClient(authentication security.Auth) PimClient {
+func (c ClientBuilder) BuildAuthenticatedClient(authentication security.Authentication) PimClient {
 	uriGenerator := routing.NewUriGenerator(c.baseUrl)
 
 	httpClient := client.NewHttpClient()
